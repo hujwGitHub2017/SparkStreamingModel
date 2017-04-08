@@ -17,7 +17,7 @@ object GetData {
     val fs = FileSystem.newInstance(hdfsConf)
     val files = GetHdfsFile(fs,"/user/wfpt/qzt")
     fs.close()
-    GetCityCodeService.initImsiLocation()
+    //GetCityCodeService.initImsiLocation()
     val fileRdd = sc.textFile(files.mkString(","), 8)
     val imsiRdd = fileRdd.filter { line => (line.length()>0 && (line+"\tend").split("\t").length==7)}
     val insiRdd2 = imsiRdd.mapPartitions{ x => {

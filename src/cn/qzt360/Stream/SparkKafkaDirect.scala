@@ -14,6 +14,7 @@ object SparkKafkaDirect {
     
     
     val conf = new SparkConf().setAppName("SparkStreamingModel")
+    conf.set("spark.streaming.stopGracefullyOnShutdown", "true")
     
     val sc =  new SparkContext(conf)
     
@@ -21,31 +22,42 @@ object SparkKafkaDirect {
     
        
      //kafka参数设置  metadata.broker.list
-    val kafkaParams:Map[String,String] = Map("metadata.broker.list" ->"datanode01:9092,datanode02:9092,datanode03:9092","group.id" -> "test")
+    val kafkaParams:Map[String,String] = Map("metadata.broker.list" ->"datanode09:9092,datanode10:9092","group.id" -> "htest")
       
     
      //创建一个set，里面放入，你要读取的topic.  可以并行读取多个topic
     
-    val topics:Set[String] = Set("flumetopic")
+    val topics:Set[String] = Set("ba_authlog2016_ok","wjpt_http_src")
     
     val messages = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](jssc, kafkaParams, topics) 
     
-   // val lines = messages.map(lines => lines._2)
-    
-    //对数据进行处理
-    val info = messages.map(lines => (lines._1))
-    info.foreachRDD(rdd =>{
-      rdd.foreach { x => println("info ==========="+x)}
-    })
     
     messages.foreachRDD(rdd =>{
-      
-      val offsetRanges = rdd.asInstanceOf[HasOffsetRanges].offsetRanges
-      //offsetRanges(0).fromOffset
-      offsetRanges.foreach { x => println("ofset============"+x.fromOffset)}
-      }
-    )
-    println("data==================="+messages.count())
+      rdd.foreach(f =>{
+        println("1、 "+f._1+"  "+"2、 "+f._2)
+      })
+    })
+    
+//    val mes = messages.map(lines => lines._2)
+//    
+//    mes.foreachRDD(rdd =>{
+//      rdd.foreach(f => println(""))
+//    })
+    
+    //对数据进行处理
+//    val info = messages.map(lines => (lines._1))
+//    
+//    info.foreachRDD(rdd =>{
+//      rdd.foreach { x => println("info ==========="+x)}
+//    })
+    
+//    messages.foreachRDD(rdd =>{
+//      val offsetRanges = rdd.asInstanceOf[HasOffsetRanges].offsetRanges
+//      //offsetRanges(0).fromOffset
+//      offsetRanges.foreach { x => println("ofset============"+x.fromOffset)}
+//      }
+//    )
+    //println("data==================="+messages.count())
     
 //    Thread.sleep(5000)
 //    lines.print() cn.spark.Streaming.SparkStreamingCheckPoint

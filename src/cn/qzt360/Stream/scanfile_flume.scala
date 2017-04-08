@@ -43,6 +43,14 @@ object scanfile_hdfs {
 	  val filestream = ssc.union(flumestreams)
 
     //val filestream = ssc.textFileStream("/user/logfile/files")
+	  
+	  val info = filestream.map ( e =>{
+      
+      val headInfo = e.event.get(0).toString().replace("}", "").split("/");
+      
+      headInfo(headInfo.length-1)+":"+new String(e.event.getBody.array())
+      
+    })
 
     filestream.foreachRDD(rdd => {
 

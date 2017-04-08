@@ -54,8 +54,8 @@ public class GetCityCodeService {
 		String info = "null,000000,null";
 		
 		try {
-			System.out.println("imsi="+strImsi);
-			System.out.println("codeMapSize ="+codeMap.size());
+			/*System.out.println("imsi="+strImsi);
+			System.out.println("codeMapSize ="+codeMap.size());*/
 			ImsiLocation il = new ImsiLocation();
 			ImsiInfoClass imsiInfo = il.getLocationByImsi(strImsi, codeMap);
 			String cityCode = imsiInfo.getCitycode();
@@ -70,6 +70,7 @@ public class GetCityCodeService {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 		return info;
 	}

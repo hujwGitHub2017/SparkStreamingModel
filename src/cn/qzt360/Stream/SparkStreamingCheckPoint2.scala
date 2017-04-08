@@ -5,9 +5,22 @@ import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.streaming.Seconds
 import org.apache.spark.streaming.{Seconds, StreamingContext, Time}
 import org.apache.spark.streaming.kafka.KafkaUtils
+import com.typesafe.config.ConfigFactory
+import org.apache.spark.SparkConf
+import scala.collection.JavaConversions.asScalaBuffer
+import org.apache.spark.SparkContext
+//import scala.collection.JavaConverters.AsScala
 
 object SparkStreamingCheckPoint2 {
   
+  private val conf = ConfigFactory.load()
+  private val sparkStreamingConf =conf.getStringList("CustomDirectKafkaExample-List")
+  val sparkConf = new SparkConf()
+  def main(args: Array[String]): Unit = {
+    sparkConf.setAppName(conf.getString("CustomDirectKafkaExample"))
+    sparkStreamingConf.foreach { x => val split=x.split("=");sparkConf.set(split(0), split(1));} 
+    val sc = new SparkContext()
+  }
   def createContext(checkpointDirectory:String):StreamingContext={
     
 		  val sparkConf = new SparkConf().setAppName("KafkaTest")  
